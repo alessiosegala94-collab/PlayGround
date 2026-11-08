@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#101210" />
+  <title>Ashen Delve — The Sunken Reliquary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="world" aria-label="First person dungeon view"></canvas>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <section id="title-screen" class="screen visible">
+      <div class="title-copy">
+        <div class="eyebrow"><i></i> A first-person dungeon adventure <i></i></div>
+        <h1>ASHEN<br><span>DELVE</span></h1>
+        <p class="subtitle">THE SUNKEN RELIQUARY</p>
+        <p class="intro">Beneath the old barrow, an ancient ward is failing.<br>Recover the sun-sigil before the dead rise in force.</p>
+        <button id="start-button" class="primary-button"><span>ENTER THE BARROW</span><b>↗</b></button>
+        <div class="title-hint"><span>✦</span> A d20-inspired adventure · Best experienced with headphones</div>
+      </div>
+      <div class="title-mark"><div class="sigil"><span>✳</span></div><div class="mark-caption">NORTHGATE<br>EXPEDITION</div></div>
+      <div class="title-bottom"><span>01 — THE BARROW</span><span>BUILT FOR THE BRAVE</span><span>v1.0</span></div>
+    </section>
+
+    <div id="hud" class="hud hidden">
+      <header class="topbar">
+        <div class="brand"><div class="brand-icon">✳</div><div><strong>ASHEN DELVE</strong><small>THE SUNKEN RELIQUARY</small></div></div>
+        <div class="location"><span class="location-dot"></span><div><strong>THE BARROW</strong><small id="location-sub">LOWER SANCTUM</small></div></div>
+        <button id="journal-button" class="icon-button" aria-label="Open journal">☰<span>JOURNAL</span></button>
+      </header>
+      <div class="quest-card"><span class="quest-kicker">CURRENT OBJECTIVE</span><strong id="objective">Find the sun-sigil</strong><div class="quest-progress"><i id="quest-progress"></i></div><small id="objective-detail">The reliquary lies deeper in the barrow.</small></div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div class="combat-log" id="combat-log" aria-live="polite"></div>
+      <div class="bottom-hud">
+        <div class="vitals-panel">
+          <div class="character-token">V</div>
+          <div class="vitals"><div class="vital-row"><span>VITALITY</span><strong id="hp-label">28 / 28</strong></div><div class="bar hp-bar"><i id="hp-fill"></i></div><div class="vital-row secondary"><span>WARD</span><strong id="ward-label">12 / 12</strong></div><div class="bar ward-bar"><i id="ward-fill"></i></div></div>
+          <div class="level-badge"><span>LVL</span><strong>03</strong></div>
+        </div>
+        <div class="hotbar">
+          <button class="hotkey selected" id="attack-button"><span class="slot-key">1</span><span class="slot-symbol">⚔</span><small>STRIKE</small></button>
+          <button class="hotkey" id="spell-button"><span class="slot-key">2</span><span class="slot-symbol spell-symbol">✦</span><small>EMBER</small><span class="cooldown" id="spell-cooldown"></span></button>
+          <button class="hotkey" id="potion-button"><span class="slot-key">3</span><span class="slot-symbol potion-symbol">◉</span><small>TONIC <b id="potion-count">2</b></small></button>
+          <div class="hotbar-divider"></div>
+          <button class="hotkey utility" id="interact-button"><span class="slot-key">E</span><span class="slot-symbol">◇</span><small>INTERACT</small></button>
+        </div>
+        <div class="stats-mini"><span><b>AC</b> 16</span><span><b>STR</b> +3</span><span><b>DEX</b> +2</span><span class="dice">d20</span></div>
+      </div>
+      <div class="mobile-controls" id="mobile-controls">
+        <div class="move-pad" id="move-pad"><div class="pad-ring"><div id="move-stick"></div></div><span class="pad-label">MOVE</span></div>
+        <div class="look-label">DRAG TO LOOK</div>
+        <div class="mobile-actions"><button id="mobile-interact" class="mobile-action interact-action">◇<small>USE</small></button><button id="mobile-spell" class="mobile-action spell-action">✦<small>CAST</small></button><button id="mobile-attack" class="mobile-action attack-action">⚔<small>STRIKE</small></button></div>
+      </div>
+      <div class="toast" id="toast"></div>
+      <div class="damage-flash" id="damage-flash"></div>
+    </div>
+
+    <section id="journal" class="modal hidden">
+      <div class="journal-panel"><button class="close-button" id="close-journal">×</button><div class="eyebrow">FIELD NOTES · 01</div><h2>The Sunken<br><em>Reliquary</em></h2><div class="journal-divider"></div><p class="journal-intro">The old ward-stone has gone dark. Three restless sentinels keep watch over the lower sanctum.</p><div class="journal-objective"><span>✦</span><div><small>YOUR TASK</small><strong id="journal-objective">Find the sun-sigil</strong></div></div><div class="journal-section"><h3>FIELD GUIDE</h3><div class="guide-row"><span class="guide-icon">⚔</span><p><strong>Steel & spell</strong><br>Strike at close range or loose an ember bolt from afar.</p></div><div class="guide-row"><span class="guide-icon">◉</span><p><strong>Stay standing</strong><br>Use a tonic when your vitality runs low. Your ward slowly returns.</p></div><div class="guide-row"><span class="guide-icon">◇</span><p><strong>Explore</strong><br>Look toward points of interest and interact to claim them.</p></div></div><div class="journal-controls"><span>WASD / LEFT STICK <b>MOVE</b></span><span>MOUSE / DRAG <b>LOOK</b></span><span>1 2 3 / BUTTONS <b>ACTIONS</b></span></div></div>
+    </section>
+
+    <section id="end-screen" class="screen hidden"><div class="end-content"><div class="end-seal">✳</div><div class="eyebrow">EXPEDITION COMPLETE</div><h2 id="end-title">THE WARD<br><em>ENDURES</em></h2><p id="end-copy">The sun-sigil burns bright once more. The barrow is quiet.</p><div class="end-stats"><span><small>SENTINELS</small><b id="final-kills">0 / 3</b></span><span><small>VITALITY</small><b id="final-hp">28 / 28</b></span><span><small>FATE ROLLS</small><b id="final-rolls">0</b></span></div><button id="again-button" class="primary-button"><span>PLAY AGAIN</span><b>↻</b></button></div></section>
+    <div class="loading" id="loading"><div class="loading-mark">✳</div><span>WAKING THE BARROW</span></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
