@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#100d0b" />
+  <title>Embervault — The Sunken Reliquary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="world" aria-label="3D dungeon game"></canvas>
+    <div class="vignette"></div>
+    <div class="top-fade"></div>
+
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">✦</div><div><span class="brand-name">EMBER<span>VAULT</span></span><small>CHRONICLES OF THE DEEP</small></div></div>
+      <div class="chapter"><span class="chapter-kicker">CHAPTER I</span><strong>THE SUNKEN RELIQUARY</strong></div>
+      <div class="top-actions"><div class="server-status"><i></i> SOLO ADVENTURE</div><button class="icon-button" id="sound-toggle" aria-label="Toggle sound">♫</button><button class="icon-button" id="fullscreen" aria-label="Toggle fullscreen">⛶</button></div>
+    </header>
+
+    <section class="hero-panel">
+      <div class="portrait"><div class="portrait-art">⚔</div><span class="level-badge">04</span></div>
+      <div class="hero-info"><div class="hero-title"><span class="class-tag">HUMAN · FIGHTER</span><span class="hero-name">ROWAN ASHWARD</span></div>
+        <div class="meter-row"><span class="meter-icon heart">♥</span><div class="meter"><div class="meter-fill health-fill" id="health-fill"></div><span id="health-text">120 / 120</span></div></div>
+        <div class="meter-row"><span class="meter-icon">✧</span><div class="meter xp-meter"><div class="meter-fill xp-fill" id="xp-fill"></div><span id="xp-text">2,450 / 3,200 XP</span></div></div>
+      </div>
+    </section>
+
+    <aside class="quest-card">
+      <div class="quest-heading"><span class="quest-icon">⚑</span><span>ACTIVE QUEST</span><button id="quest-toggle" aria-label="Collapse quest">−</button></div>
+      <h2>THE SUNKEN RELIQUARY</h2>
+      <p class="quest-subtitle">An old evil stirs beneath the abbey.</p>
+      <div class="quest-rule"></div>
+      <div class="objective" id="objective"><span class="objective-dot"></span><span>Clear the crypt guardians</span><b id="kill-count">0 / 3</b></div>
+      <div class="objective muted" id="boss-objective"><span class="objective-dot"></span><span>Defeat the Ember Wyrm</span><b>—</b></div>
+      <div class="quest-reward"><span>REWARD</span><b>✧ &nbsp;850 XP</b><i>◈ &nbsp;Ancient signet</i></div>
+    </aside>
+
+    <div class="objective-banner" id="objective-banner"><span class="banner-glyph">✦</span><div><small>NEW OBJECTIVE</small><strong>Break the seal. Silence the deep.</strong></div></div>
+
+    <section class="target-panel hidden" id="target-panel"><div class="target-top"><span class="target-type" id="target-type">CRYPT GUARDIAN</span><span class="target-level" id="target-level">LVL 03</span></div><strong id="target-name">Ashen Goblin</strong><div class="target-health"><div id="target-health-fill"></div></div></section>
+
+    <section class="combat-log" id="combat-log"><div class="log-label">COMBAT LOG <span>✦</span></div><div class="log-lines" id="log-lines"><p><i>›</i> The crypt air tastes of ash.</p><p><i>›</i> Your sword hand tightens.</p></div></section>
+
+    <div class="zone-label"><span class="zone-mark">⌖</span><div><b>THE ASHEN CRYPT</b><small>UNDER THE OLD ABBEY</small></div><span class="zone-divider"></span><div class="coordinates">DEPTH <b>— 300 FT</b></div></div>
+
+    <div class="toast" id="toast"></div>
+    <div class="damage-layer" id="damage-layer"></div>
+
+    <div class="controls-hint" id="controls-hint"><span class="key">W A S D</span> MOVE <span class="hint-divider">·</span><span class="key">CLICK</span> TARGET <span class="hint-divider">·</span><span class="key">SPACE</span> ATTACK</div>
+
+    <section class="action-bar">
+      <div class="resource"><span class="resource-label">STAMINA</span><div class="stamina-dots" id="stamina-dots"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="abilities">
+        <button class="ability" id="ability-attack" title="Steel Strike · Space"><span class="ability-key">SPACE</span><span class="ability-glyph steel">⚔</span><span class="ability-name">STEEL STRIKE</span><span class="cooldown"></span></button>
+        <button class="ability" id="ability-cleave" title="Cleave · 1"><span class="ability-key">1</span><span class="ability-glyph cleave">◈</span><span class="ability-name">CLEAVE</span><span class="cooldown"></span></button>
+        <button class="ability" id="ability-guard" title="Iron Guard · 2"><span class="ability-key">2</span><span class="ability-glyph guard">⬟</span><span class="ability-name">IRON GUARD</span><span class="cooldown"></span></button>
+        <button class="ability" id="ability-potion" title="Healing Draught · 3"><span class="ability-key">3</span><span class="ability-glyph potion">⚗</span><span class="ability-name">DRAUGHT <b id="potion-count">×2</b></span><span class="cooldown"></span></button>
+      </div>
+      <div class="bag-area"><button class="bag-button" id="inventory-button"><span>▣</span><small>BAG</small><b class="bag-count">1</b></button></div>
+    </section>
+
+    <div class="touch-controls" id="touch-controls"><div class="dpad"><button data-move="forward">▲</button><div><button data-move="left">◀</button><button data-move="back">▼</button><button data-move="right">▶</button></div></div><button class="touch-attack" id="touch-attack">⚔<small>ATTACK</small></button></div>
+
+    <div class="inventory-modal" id="inventory-modal"><div class="inventory-window"><button class="close-modal" id="close-inventory">×</button><div class="modal-eyebrow">ROWAN ASHWARD · LEVEL 4</div><h2>ADVENTURER'S SATCHEL</h2><div class="inventory-grid"><div class="item-slot equipped"><span>⚔</span><b>VOWBREAKER</b><small>+2 LONGSWORD</small></div><div class="item-slot"><span>⚗</span><b>HEALING DRAUGHT</b><small>× 2 · RESTORES 45 HP</small></div><div class="item-slot empty">—</div><div class="item-slot empty">—</div></div><p class="inventory-note">A few essentials for a long descent. The rest is lost to the dark.</p></div></div>
+
+    <div class="start-screen" id="start-screen"><div class="start-rune">✦</div><p class="eyebrow">A D20 DUNGEON CRAWL</p><h1>THE SUNKEN<br><em>RELIQUARY</em></h1><p class="start-copy">Beneath a ruined abbey, an ember wyrm guards a relic that should have stayed buried. Steel your nerve, take up your blade, and descend.</p><div class="start-rule"><span></span> A SOLO ADVENTURE <span></span></div><button class="begin-button" id="begin-button">ENTER THE CRYPT <span>→</span></button><div class="start-controls">WASD TO MOVE <i>·</i> CLICK A FOE TO TARGET <i>·</i> 1–3 TO USE ABILITIES</div></div>
+
+    <div class="death-screen hidden" id="death-screen"><div class="start-rune">☠</div><p class="eyebrow">THE DARK CLAIMS ANOTHER</p><h2>FALLEN, BUT<br><em>NOT FORGOTTEN</em></h2><p>The crypt keeps its secrets… for now.</p><button class="begin-button" id="retry-button">RISE AGAIN <span>↻</span></button></div>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
